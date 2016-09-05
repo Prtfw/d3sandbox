@@ -20,13 +20,13 @@ body,html{
 }
 
 .bar-label{
-	fill: white;
+	fill: #000;
 	background-color: black;
 	visibility: visible;
 	/*text-anchor:end;*/
 	position: relative;
 	/*z-index: 9999 !important;*/
-	font-size: 24px;
+	font-size: 14px;
 }
 
 .Ax path,

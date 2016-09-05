@@ -12,7 +12,7 @@
     var w = 800
     var h = 450
     
-    var margin = {u: 20, d:40, l:80, r:20}
+    var margin = {u: 40, d:40, l:60, r:20}
     
     var width = w-margin.l - margin.r
     var height = h-margin.u - margin.d
@@ -31,15 +31,15 @@
 	{key: "Fritter", 	value: 17},
 	{key: "Bearclaw", 	value: 21}
 ];
-//     var x = d3.scale.ordinal() //distinct values
-// 		.domain(data.map(function(d){return d.key}))
-// 		.rangeBands([height,0]);
-//     var y = d3.scale.linear()
-// 		.domain([0,d3.max(data, function(d){return d.value})])
-// 		.range([0,width]);
+    var x = d3.scale.ordinal() //distinct values
+		.domain(data.map(function(d){return d.key}))
+		.rangeBands([0,width]);
+    var y = d3.scale.linear()
+		.domain([0,d3.max(data, function(d){return d.value})])
+		.range([height,0]);
 		
 	
-	
+	/*
       var x = d3.scale.linear()
 		.domain([0,d3.max(data, function(d){return d.value})])
 		.range([0,width]);
@@ -48,7 +48,7 @@
 		.rangeBands([0,height]);
 		
     
-	/*
+	
     
     
 	var lincolscale = d3.scale.linear()
@@ -84,25 +84,28 @@
             //.attr("class", 'bar')
             .classed('bar', true)
             .classed('foo', true) //class = foo bar ; good for assigning styles
-            .attr('x',0)
-            .attr('y',function(dt,i){return y(dt.key)})
-            .attr('width', function(dt,i){return x(dt.value)})
-            .attr('height', function(dt,i){ return y.rangeBand()-1})
+            .attr('x',function(dt,i){return x(dt.key)})
+            .attr('y',function(dt,i){return y(dt.value)})
+            .attr('width', function(dt,i){return x.rangeBand()})
+            .attr('height', function(dt,i){ return height-y(dt.value)})
             .style('fill', function(d,i){
                 //return lincolorscale(i)
                 return ordinalcolscale(i)
             })
+            
+                        console.log(x.rangeBand())
+
             
     this.selectAll('.bar-label')
         .data(data)
         .enter()
             .append('text')
             .classed('bar-label', true)
-            .attr('text-anchor', 'end')
-            .attr('x',function(dt,i){return x(dt.value)})
-            .attr('y',function(dt,i){return y(dt.key)})   
-            .attr('dy',function(dt,i){return y.rangeBand()/1.5+2}) 
-            .attr('dx', -4)
+            .attr('text-anchor', 'middle')
+            .attr('x',function(dt,i){return x(dt.key)+(x.rangeBand()/2)})
+            .attr('y',function(dt,i){return y(dt.value)})   
+            .attr('dy',function(dt,i){return -6}) 
+            .attr('dx', 0)
             .text(function(d,i){
             return d.value;
             })
@@ -114,7 +117,7 @@
         
      this.append('g')
         .classed('y Ax', true)
-        .attr('transform', 'translate(0,0') //defines the area of the chart so the axis can be oriented
+        .attr('transform', 'translate(0,0)') //defines the area of the chart so the axis can be oriented
         .call(yAx) //takes yAx as defined and insert into group
         //.style('visibility', "visible")
     }
