@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>d3</title>
+    <link rel="stylesheet" href="main.css">
+    <!--<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>-->
+    <script  type="text/javascript" src="d3.min.js"></script>
+</head>
+<body>
+    <script>
+    var w = 800
+    var h = 450
+    
+    var margin = {u: 20, d:20, l:20, r:20}
+    
+    var width = w-margin.l - margin.r
+    var height = h-margin.u - margin.d
+    
+    var data = [
+	{key: "Glazed",		value: 132},
+	{key: "Jelly",		value: 71},
+	{key: "Holes",		value: 337},
+	{key: "Sprinkles",	value: 93},
+	{key: "Crumb",		value: 78},
+	{key: "Chocolate",	value: 43},
+	{key: "Coconut", 	value: 20},
+	{key: "Cream",		value: 16},
+	{key: "Cruller", 	value: 30},
+	{key: "Éclair", 	value: 8},
+	{key: "Fritter", 	value: 17},
+	{key: "Bearclaw", 	value: 21}
+];
+    var x = d3.scale.linear()
+		.domain([0,d3.max(data, function(d){return d.value})])
+		.range([0,width]);
+    var y = d3.scale.ordinal() //distinct values
+		.domain([0,data.length])
+		.range([0,height]);
+    var svg = d3.select('body').append('svg') //return so you can chain it
+                .attr('id', 'chart') //any css/html attribute 
+                .attr('width', w)
+                .attr('height', h)
+                
+    var chart = svg.append('g') //add artificial group element svg > g > rect / text
+                .classed('display', true)
+                .attr('transform', 'translate('+ margin.l +','+ margin.u +')')
+    var bh = 20
+    
+    
+    function plot(params){
+    this.selectAll('.bar') //bind data to class bar
+        .data(params.data)
+        .enter() //enter phase
+            .append('rect') //creates a rect for each element of the data set
+            //.attr("class", 'bar')
+            .classed('bar', true)
+            .classed('foo', true) //class = foo bar ; good for assigning styles
+            .attr('x',0)
+            .attr('y',function(dt,i){return y(i)})
+            .attr('width', function(dt,i){return x(dt.value)})
+            .attr('height', function(dt,i){ return y(1)-1})
+    this.selectAll('.bar-label')
+        .data(data)
+        .enter()
+            .append('text')
+            .classed('bar-label', true)
+            .attr('text-anchor', 'end')
+            .attr('x',function(dt,i){return x(dt.value)})
+            .attr('y',function(dt,i){return y(i)})   
+            .attr('dy',function(dt,i){return y(1)/1.5}) 
+            .attr('dx', -4)
+            .text(function(d,i){
+            return d.value;
+            })
+            
+    }
+    plot.call(chart, {data:data}) //plot.call ('the thing that is pointed to by "this"', {params})
+    </script>
+    
+</body>
+</html>
