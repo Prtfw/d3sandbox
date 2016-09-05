@@ -28,3 +28,9 @@ body,html{
 	/*z-index: 9999 !important;*/
 	font-size: 24px;
 }
+
+.Ax path,
+.Ax line{
+	fill: none;
+	stroke: #000;
+}
