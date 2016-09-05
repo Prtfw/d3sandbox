@@ -74,7 +74,7 @@
     
     function plot(params){
     this.append('g')  //add this first then the rest id drawn on top
-        .call(yGrid)
+        .call(params.gridln)
         .classed('gridline', true)
         .attr('transform', 'translate(0,0)')
         
@@ -112,7 +112,7 @@
     this.append('g')
         .classed('x Ax', true)
         .attr('transform', 'translate('+ 0 +','+ height +')') //defines the area of the chart so the axis can be oriented
-        .call(xAx)
+        .call(params.ax.x)
             .selectAll('text') //now working with xaxis group
                 .attr('dx', -25)
                 .attr('dy', 18)
@@ -121,7 +121,7 @@
      this.append('g')
         .classed('y Ax', true)
         .attr('transform', 'translate(0,0)') //defines the area of the chart so the axis can be oriented
-        .call(yAx) //takes yAx as defined and insert into group
+        .call(params.ax.y) //takes yAx as defined and insert into group
         //.style('visibility', "visible")
     
         
@@ -145,7 +145,6 @@
         .attr('transform', 'translate(' + (width/2)+', 75)')
 
     }
-    
     plot.call(chart, 
     {data:data,
      ax: {
@@ -153,8 +152,6 @@
          y:yAx,
         },
     gridln: yGrid,
-    
-        
     }) //plot.call ('the thing that is pointed to by "this"', {params})
     
     </script>
