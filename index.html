@@ -70,15 +70,168 @@
     var chart = svg.append('g') //add artificial group element svg > g > rect / text
                 .classed('display', true)
                 .attr('transform', 'translate('+ margin.l +','+ margin.u +')')
-    var bh = 20
+
+    var control = d3.select('body')
+                    .append('div')
+                    .attr('id', 'controls')
+                    
+    var sort_btn = control.append('button')
+                    .html('Sort: Ascend')
+                    .attr('state', 0)
+                    .style('visibility', "visible")
+                    
+    
+    function genAx(params){
+        
+        if(params.init == true){
+            this.append('g')  //add this first then the rest id drawn on top
+                .call(params.gridln)
+                .classed('gridline', true)
+                .attr('transform', 'translate(0,0)')
+            
+            
+            //make xAx
+            this.append('g')
+                .classed('x Ax', true)
+                .attr('transform', 'translate('+ 0 +','+ height +')') //defines the area of the chart so the axis can be oriented
+                .call(params.ax.x)
+                    .selectAll('text') //now working with xaxis group
+                    .classed('xAx-label', true)
+                        .style('text-anchor', 'end')
+                        .attr('dx', -25)
+                        .attr('dy', 6)
+                        .attr('transform', 'translate(0,0) rotate(-35)')
+                                            //
+
+            //make yAx
+             this.append('g')
+                .classed('y Ax', true)
+                .attr('transform', 'translate(0,0)') //defines the area of the chart so the axis can be oriented
+                .call(params.ax.y) //takes yAx as defined and insert into group
+                //.style('visibility', "visible")
+            
+                    //label for xAx
+            this.select(".x.Ax")
+                .append('text')
+                .text('Donuts!')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('dx', -25)
+                .style('text-anchor', 'middle')
+                .attr('transform', 'translate(' + (width/2)+', 75)')
+        
+            
+            //label for yAx
+            this.select(".y.Ax")
+                .append('text')
+                .text('Units Sold')
+                .attr('x',0)
+                .attr('y',0)
+                //.attr('dx', -10)
+                .style('text-anchor', 'middle')
+                .style('visibility', "visible")
+                .attr('transform', 'translate(-45,'+ height/2 +') rotate(-90)')
+        }
+        else{
+                console.log('else')
+            //update xAx
+                this.selectAll('g.x.Ax')
+                    .transition()
+                    .duration(500)
+                    .call(params.ax.x) //updated with the call
+                this.selectAll('.xAx-label')
+                    .style('text-anchor', 'end')
+                    .attr('dx', -25)
+                    .attr('dy', 6)
+                    .attr('transform', 'translate(0,0) rotate(-35)')
+                    
+                    
+                this.selectAll('g.y.ax')
+                    .call(params.ax.y)
+        }
+        
+
+    }
     
     function plot(params){
-    this.append('g')  //add this first then the rest id drawn on top
-        .call(params.gridln)
-        .classed('gridline', true)
-        .attr('transform', 'translate(0,0)')
+    x.domain(data.map(function(d){return d.key}))            //must update domain each time data updates!!
+    y.domain([0,d3.max(data, function(d){return d.value})])
+    
+    
+    genAx.call(this, params) //pass this keyword = chart
+    
+
+    //enter
+        //bars
+        this.selectAll('.bar') //bind data to class bar
+        .data(params.data)
+        .enter() //enter phase
+            .append('rect') //creates a rect for each element of the data set
+            //.attr("class", 'bar')
+            .classed('bar', true)
+            .on('mouseover', function(d,i){
+                d3.select(this).style('fill', 'yellow') // the caller
+            })
+             .on('mousemove', function(d,i){
+                d3.select(this).style('fill', 'yellow') // the caller
+            })
+             .on('mouseout', function(d,i){
+                d3.select(this).style('fill', ordinalcolscale(i)) // the caller
+            })
         
-    this.selectAll('.bar') //bind data to class bar
+        //text labels
+        this.selectAll('.bar-label')
+        .data(data)
+        .enter()
+            .append('text')
+            .classed('bar-label', true)
+        
+    //update
+        //bar
+        this.selectAll('.bar')  //bound and updating
+            .classed('foo', true) //class = foo bar ; good for assigning styles
+            .transition()
+            .duration(500)
+            .attr('x',function(dt,i){return x(dt.key)})
+            .attr('y',function(dt,i){return y(dt.value)})
+            .attr('width', function(dt,i){return x.rangeBand()})
+            .attr('height', function(dt,i){ return height-y(dt.value)})
+            .style('fill', function(d,i){
+                //return lincolorscale(i)
+                return ordinalcolscale(i)
+            })
+        
+        //label    
+        this.selectAll('.bar-label')
+        .transition()
+        .duration(500)
+        .ease('bounce')
+        .delay(200)
+        .attr('text-anchor', 'middle')
+            .attr('x',function(dt,i){return x(dt.key)+(x.rangeBand()/2)})
+            .attr('y',function(dt,i){return y(dt.value)})   
+            .attr('dy',function(dt,i){return -6}) 
+            .attr('dx', 0)
+            .text(function(d,i){
+            return d.value;
+            })
+    
+    //exit: remove all unbound elements
+        //bar
+        this.selectAll('.bar')
+            .data(params.data)
+            .exit()
+            .remove()
+            
+        //label
+         this.selectAll('.bar-label')
+            .data(params.data)
+            .exit()
+            .remove()
+        
+   /* 
+   //old one phase code for bar creation
+   this.selectAll('.bar') //bind data to class bar
         .data(params.data)
         .enter() //enter phase
             .append('rect') //creates a rect for each element of the data set
@@ -93,58 +246,44 @@
                 //return lincolorscale(i)
                 return ordinalcolscale(i)
             })
-                        console.log(x.rangeBand())
-            
-    this.selectAll('.bar-label')
-        .data(data)
-        .enter()
-            .append('text')
-            .classed('bar-label', true)
-            .attr('text-anchor', 'middle')
-            .attr('x',function(dt,i){return x(dt.key)+(x.rangeBand()/2)})
-            .attr('y',function(dt,i){return y(dt.value)})   
-            .attr('dy',function(dt,i){return -6}) 
-            .attr('dx', 0)
-            .text(function(d,i){
-            return d.value;
-            })
+                       // console.log(x.rangeBand())
+    */
     
-    this.append('g')
-        .classed('x Ax', true)
-        .attr('transform', 'translate('+ 0 +','+ height +')') //defines the area of the chart so the axis can be oriented
-        .call(params.ax.x)
-            .selectAll('text') //now working with xaxis group
-                .attr('dx', -25)
-                .attr('dy', 18)
-                .attr('transform', 'translate(0,0) rotate(-35)')
-                
-     this.append('g')
-        .classed('y Ax', true)
-        .attr('transform', 'translate(0,0)') //defines the area of the chart so the axis can be oriented
-        .call(params.ax.y) //takes yAx as defined and insert into group
-        //.style('visibility', "visible")
+
     
-        
-    this.select(".y.Ax")
-        .append('text')
-        .text('Units Sold')
-        .attr('x',0)
-        .attr('y',0)
-        //.attr('dx', -10)
-        .style('text-anchor', 'middle')
-        .style('visibility', "visible")
-        .attr('transform', 'translate(-45,'+ height/2 +') rotate(-90)')
-        
-    this.select(".x.Ax")
-        .append('text')
-        .text('Donuts!')
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('dx', -25)
-        .style('text-anchor', 'middle')
-        .attr('transform', 'translate(' + (width/2)+', 75)')
+           
+    
 
     }
+    
+    sort_btn.on('click', function(){
+        var self = d3.select(this)
+        var state = +self.attr('state')
+         ascend = (a,b)=>{return a.value - b.value}
+         desc = (a,b)=>{return b.value-a.value}
+        var txt = "sort data: "
+        if(state ===0){ state = 1
+            txt += "desc"
+            data.sort(ascend)
+        }
+        else{state =0
+            txt += "ascend"
+            data.sort(desc)
+        }
+        self.attr('state', state)
+        self.html(txt)
+        data = data
+         plot.call(chart, 
+                {data:data,
+                 ax: {
+                        x:xAx,
+                        y:yAx,
+                        },
+                    gridln: yGrid,
+                    init: false
+                }) 
+    }); //create event listener
+    
     plot.call(chart, 
     {data:data,
      ax: {
@@ -152,6 +291,7 @@
          y:yAx,
         },
     gridln: yGrid,
+    init: true
     }) //plot.call ('the thing that is pointed to by "this"', {params})
     
     </script>
