@@ -11,9 +11,7 @@
     <script>
     var w = 800
     var h = 450
-    
-    var margin = {u: 40, d:40, l:60, r:20}
-    
+    var margin = {u: 25, d:80, l:60, r:20}
     var width = w-margin.l - margin.r
     var height = h-margin.u - margin.d
     
@@ -38,7 +36,6 @@
 		.domain([0,d3.max(data, function(d){return d.value})])
 		.range([height,0]);
 		
-	
 	/*
       var x = d3.scale.linear()
 		.domain([0,d3.max(data, function(d){return d.value})])
@@ -46,16 +43,11 @@
     var y = d3.scale.ordinal() //distinct values
 		.domain(data.map(function(d){return d.key}))
 		.rangeBands([0,height]);
-		
-    
-	
-    
     
 	var lincolscale = d3.scale.linear()
 	                       .domain([0,data.length])
 	                       .range(['#daecba','#5231dc'])
 	                       */
-	                       
 	var ordinalcolscale = d3.scale.category20();
 	
 	var xAx = d3.svg.axis()
@@ -64,7 +56,12 @@
     var yAx = d3.svg.axis()
 	            .scale(y)
 	            .orient('left')
-	             
+	            
+	var yGrid = d3.svg.axis() //same as the yAx so they line up
+	            .scale(y)
+	            .orient('left')
+	            .tickSize(-width,0,0)
+	            .tickFormat("")
     var svg = d3.select('body').append('svg') //return so you can chain it
                 .attr('id', 'chart') //any css/html attribute 
                 .attr('width', w)
@@ -75,8 +72,12 @@
                 .attr('transform', 'translate('+ margin.l +','+ margin.u +')')
     var bh = 20
     
-    
     function plot(params){
+    this.append('g')  //add this first then the rest id drawn on top
+        .call(yGrid)
+        .classed('gridline', true)
+        .attr('transform', 'translate(0,0)')
+        
     this.selectAll('.bar') //bind data to class bar
         .data(params.data)
         .enter() //enter phase
@@ -92,9 +93,7 @@
                 //return lincolorscale(i)
                 return ordinalcolscale(i)
             })
-            
                         console.log(x.rangeBand())
-
             
     this.selectAll('.bar-label')
         .data(data)
@@ -114,14 +113,50 @@
         .classed('x Ax', true)
         .attr('transform', 'translate('+ 0 +','+ height +')') //defines the area of the chart so the axis can be oriented
         .call(xAx)
-        
+            .selectAll('text') //now working with xaxis group
+                .attr('dx', -25)
+                .attr('dy', 18)
+                .attr('transform', 'translate(0,0) rotate(-35)')
+                
      this.append('g')
         .classed('y Ax', true)
         .attr('transform', 'translate(0,0)') //defines the area of the chart so the axis can be oriented
         .call(yAx) //takes yAx as defined and insert into group
         //.style('visibility', "visible")
+    
+        
+    this.select(".y.Ax")
+        .append('text')
+        .text('Units Sold')
+        .attr('x',0)
+        .attr('y',0)
+        //.attr('dx', -10)
+        .style('text-anchor', 'middle')
+        .style('visibility', "visible")
+        .attr('transform', 'translate(-45,'+ height/2 +') rotate(-90)')
+        
+    this.select(".x.Ax")
+        .append('text')
+        .text('Donuts!')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('dx', -25)
+        .style('text-anchor', 'middle')
+        .attr('transform', 'translate(' + (width/2)+', 75)')
+
     }
-    plot.call(chart, {data:data}) //plot.call ('the thing that is pointed to by "this"', {params})
+    
+    plot.call(chart, 
+    {data:data,
+     ax: {
+         x:xAx,
+         y:yAx,
+        },
+    gridln: yGrid,
+    
+        
+    }) //plot.call ('the thing that is pointed to by "this"', {params})
+    
     </script>
     
 </body>

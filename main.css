@@ -34,3 +34,10 @@ body,html{
 	fill: none;
 	stroke: #000;
 }
+
+.gridline path,
+.gridline line{
+	fill: none;
+	stroke: #ccc;
+	
+}
