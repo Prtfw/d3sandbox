@@ -9,6 +9,11 @@ body,html{
 	background-color: #F5F2EB;
 	border: 1px solid #CCC;
 }
+
+#chart2{
+	background-color: #F5F2EB;
+	border: 1px solid #CCC;
+}
 .bar{
 	fill: purple;
 	shape-rendering: crispEdges;

@@ -11,23 +11,23 @@
     <script>
     var w = 800
     var h = 450
-    var margin = {u: 25, d:80, l:60, r:20}
+    var margin = {u:30, d:60, l:60, r:20}
     var width = w-margin.l - margin.r
     var height = h-margin.u - margin.d
     
     var data = [
-	{key: "Glazed",		value: 132},
-	{key: "Jelly",		value: 71},
-	{key: "Holes",		value: 337},
-	{key: "Sprinkles",	value: 93},
-	{key: "Crumb",		value: 78},
-	{key: "Chocolate",	value: 43},
-	{key: "Coconut", 	value: 20},
-	{key: "Cream",		value: 16},
-	{key: "Cruller", 	value: 30},
-	{key: "Éclair", 	value: 8},
-	{key: "Fritter", 	value: 17},
-	{key: "Bearclaw", 	value: 21}
+	{key: "Nem",		value: 337},
+	{key: "David",		value: 71},
+	{key: "AE",		value: 112 },
+	{key: "AK",	value: 93},
+	{key: "Zhino",		value: 78},
+	{key: "Lily",	value: 43},
+	{key: "Mad", 	value: 68},
+	{key: "Ben",		value: 16},
+	{key: "Newb1", 	value: 30},
+	{key: "Newb2", 	value: 8},
+	{key: "Newb3", 	value: 17},
+	{key: "Newb4", 	value: 21}
 ];
     var x = d3.scale.ordinal() //distinct values
 		.domain(data.map(function(d){return d.key}))
@@ -66,6 +66,7 @@
                 .attr('id', 'chart') //any css/html attribute 
                 .attr('width', w)
                 .attr('height', h)
+                .style('margin', 20)
                 
     var chart = svg.append('g') //add artificial group element svg > g > rect / text
                 .classed('display', true)
@@ -113,7 +114,7 @@
                     //label for xAx
             this.select(".x.Ax")
                 .append('text')
-                .text('Donuts!')
+                .text('Devs')
                 .attr('x', 0)
                 .attr('y', 0)
                 .attr('dx', -25)
@@ -124,7 +125,7 @@
             //label for yAx
             this.select(".y.Ax")
                 .append('text')
-                .text('Units Sold')
+                .text('Some Metric')
                 .attr('x',0)
                 .attr('y',0)
                 //.attr('dx', -10)
@@ -294,6 +295,202 @@
     init: true
     }) //plot.call ('the thing that is pointed to by "this"', {params})
     
+    
+
+    // =================> c2
+    
+    var data2 = [
+	{key: "Devs", value: 60, date: "2016/09/01" },
+	{key: "Devs", value: 58, date: "2016/09/02" },
+	{key: "Devs", value: 59, date: "2016/09/03" },
+	{key: "Devs", value: 56, date: "2016/09/04" },
+	{key: "Devs", value: 57, date: "2016/09/05" },
+	{key: "Devs", value: 55, date: "2016/09/06" },
+	{key: "Devs", value: 56, date: "2016/09/07" },
+	{key: "Devs", value: 52, date: "2016/09/08" },
+	{key: "Devs", value: 54, date: "2016/09/09" },
+	{key: "Devs", value: 57, date: "2016/09/10" },
+	{key: "Devs", value: 56, date: "2016/09/11" },
+	{key: "Devs", value: 59, date: "2016/09/12" },
+	{key: "Devs", value: 56, date: "2016/09/13" },
+	{key: "Devs", value: 52, date: "2016/09/14" },
+	{key: "Devs", value: 48, date: "2016/09/15" },
+	{key: "Devs", value: 47, date: "2016/09/16" },
+	{key: "Devs", value: 48, date: "2016/09/17" },
+	{key: "Devs", value: 45, date: "2016/09/18" },
+	{key: "Devs", value: 43, date: "2016/09/19" },
+	{key: "Devs", value: 41, date: "2016/09/20" },
+	{key: "Devs", value: 37, date: "2016/09/21" },
+	{key: "Devs", value: 36, date: "2016/09/22" },
+	{key: "Devs", value: 39, date: "2016/09/23" },
+	{key: "Devs", value: 41, date: "2016/09/24" },
+	{key: "Devs", value: 42, date: "2016/09/25" },
+	{key: "Devs", value: 40, date: "2016/09/26" },
+	{key: "Devs", value: 43, date: "2016/09/27" },
+	{key: "Devs", value: 41, date: "2016/09/28" },
+	{key: "Devs", value: 39, date: "2016/09/29" },
+	{key: "Devs", value: 40, date: "2016/09/30" },
+	{key: "Devs", value: 39, date: "2016/10/01" }
+];
+    
+    var margin2 = {u:40, d:15, l:60, r:40}
+    
+    var width2 = w - margin2.l - margin2.r;
+    var height2 = h - margin2.u - margin2.d;
+    
+    var svg = d3.select('body').append('svg') //return so you can chain it
+                .attr('id', 'chart2') //any css/html attribute 
+                .attr('width', w)
+                .attr('height', h)
+                .style('margin', 20)
+                .style('padding', 10)
+                
+    var chart2 = svg.append('g')
+                .classed('display', true)
+                .attr('transform', 'translate(' + margin2.l + ',' + margin2.u + ')')
+    
+    
+    var dtparse = d3.time.format('%Y/%m/%d').parse;
+   
+               
+    var x2 = d3.time.scale()
+		    .domain(d3.extent(data2, function(d){
+		       // console.log(d.date)
+			var date = dtparse(d.date);
+			return date;
+		}))
+		.range([0,width2])
+   
+    var y2 = d3.scale.linear()
+		    .domain([0, d3.max(data2, function(d){
+			return d.value;
+		})])
+		.range([height2, 0]);
+                
+    var xAx2 = d3.svg.axis()
+                .scale(x2)
+                .orient('bottom')
+                .ticks(d3.time.days, 7)
+                .tickFormat(d3.time.format('%m/%d'))
+
+                
+    var yAx2 = d3.svg.axis()
+                .scale(y2)
+                .orient('left')
+                .ticks(5)
+
+                
+    
+    
+    
+    // var line = d3.svg.line()
+    //             .x(function(d){
+    //                 var date = dtparse(d.date)
+    //                 return x(date)
+    //             })
+    //             .y(function(d){
+    //                 return y(d.value)
+    //             })
+    
+    var line = d3.svg.line()
+			.x(function(d){
+				var date = dtparse(d.date);
+				return x(date);
+			})
+			.y(function(d){
+				return y(d.value);
+			});
+                
+    function plot2(params){
+        
+        //axis
+        
+        this.append('g')
+            .classed('x Ax', true)
+            .attr('transform', 'translate(0,' + height +')')
+            .call(params.axis.x)
+                .selectAll('text') //now working with xaxis group
+                .classed('xAx-label', true)
+                .style('text-anchor', 'middle')
+                .attr('dx', 8)
+                .attr('transform', 'translate(0,0) rotate(25)')
+
+        
+        
+        
+        this.append('g')
+                .classed('y Ax', true)
+                .attr('transform', 'translate(0,0)') //defines the area of the chart so the axis can be oriented
+                .call(params.axis.y)
+        
+        
+        this.select(".y.Ax")
+                .append('text')
+                .text('Scope Creep')
+                .attr('x',0)
+                .attr('y',0)
+                //.attr('dy', -90)
+                
+                .style('text-anchor', 'middle')
+                .style('visibility', "visible")
+                .attr('transform', 'translate(-45,'+ height/2 +') rotate(-90)')
+        
+        //enter
+        
+        this.selectAll('.trendln')
+            .data(params.data)
+            .enter()
+                .append('path')
+                .classed('trendln',true)
+                
+        this.selectAll('.pt')
+            .data(params.data)
+            .enter()
+                .append('circle')
+                .classed('pt', true)
+                .attr('r', 2);
+                
+                
+        
+        //update
+        // this.selectAll('.trendln')
+        //     .attr('d', function(d){
+        //         console.log(d)
+        //         //console.log(line(d.value))
+        //     return line(d)
+                
+        //     })
+        
+        this.selectAll('.pt')
+            .attr('cx', function(d){
+                var date = dtparse(d.date)
+                console.log(date)
+                return x2(date)})
+            .attr('cy', function(d){return y2(d.value)})
+        
+        
+        //exit()
+        
+        this.selectAll('.trendln')
+            .data(params.data)
+            .exit()
+            .remove()
+        
+        this.selectAll('.pt')
+            .data(params.data)
+            .exit()
+            .remove()
+    }
+    
+    plot2.call(chart2,{
+        data: data2,
+        axis: {
+            x: xAx2,
+            y: yAx2
+        }
+    })
+            
+            
     </script>
     
 </body>
