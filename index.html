@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>d3</title>
-    <link rel="stylesheet" href="main.css">
     <!--<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>-->
     <script  type="text/javascript" src="d3.min.js"></script>
 </head>
@@ -395,16 +394,24 @@
     var line = d3.svg.line()
 			.x(function(d){
 				var date = dtparse(d.date);
-				return x(date);
+				return x2(date);
 			})
 			.y(function(d){
-				return y(d.value);
+				return y2(d.value);
 			});
+			
+	var area = d3.svg.area()
+	           .x(function(d){
+	               var date = dtparse(d.date);
+				    return x2(date);
+	           })
+	           .y0(height)
+	           .y1(function(d){
+				return y2(d.value);})
                 
     function plot2(params){
         
         //axis
-        
         this.append('g')
             .classed('x Ax', true)
             .attr('transform', 'translate(0,' + height +')')
@@ -414,8 +421,6 @@
                 .style('text-anchor', 'middle')
                 .attr('dx', 8)
                 .attr('transform', 'translate(0,0) rotate(25)')
-
-        
         
         
         this.append('g')
@@ -426,7 +431,7 @@
         
         this.select(".y.Ax")
                 .append('text')
-                .text('Scope Creep')
+                .text('Sprint Burndown')
                 .attr('x',0)
                 .attr('y',0)
                 //.attr('dy', -90)
@@ -437,11 +442,20 @@
         
         //enter
         
+        this.selectAll('.area')
+            .data([params.data])
+            .enter()
+                .append('path')
+                .classed('area',true)
+        
         this.selectAll('.trendln')
-            .data(params.data)
+            .data([params.data])
             .enter()
                 .append('path')
                 .classed('trendln',true)
+                // .style('fill', "none")
+                // .style('stroke', "#ccc")
+                // .style('stroke-width', "4px")
                 
         this.selectAll('.pt')
             .data(params.data)
@@ -453,13 +467,22 @@
                 
         
         //update
-        // this.selectAll('.trendln')
-        //     .attr('d', function(d){
-        //         console.log(d)
-        //         //console.log(line(d.value))
-        //     return line(d)
+        
+        this.selectAll('.area')
+            .attr('d', function(d){
+                //console.log(d)
+                //console.log(line(d.value))
+            return area(d)
                 
-        //     })
+            })
+        
+        this.selectAll('.trendln')
+            .attr('d', function(d){
+                //console.log(d)
+                //console.log(line(d.value))
+            return line(d)
+                
+            })
         
         this.selectAll('.pt')
             .attr('cx', function(d){
@@ -471,10 +494,19 @@
         
         //exit()
         
-        this.selectAll('.trendln')
-            .data(params.data)
+        this.selectAll('.area')
+            .data([params.data])
             .exit()
             .remove()
+            
+        
+        this.selectAll('.trendln')
+            .data([params.data])
+            .exit()
+            .remove()
+            
+            console.log(params.data)
+            console.log([params.data])
         
         this.selectAll('.pt')
             .data(params.data)
@@ -492,6 +524,9 @@
             
             
     </script>
+    
+        <link rel="stylesheet" href="main.css">
+
     
 </body>
 </html>
