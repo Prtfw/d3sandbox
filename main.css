@@ -17,11 +17,7 @@ body,html{
 
 }
 
-#chart2.trendln{
-	fill: none;
-	stroke: #ccc;
-	}
-	
+
 .bar{
 	fill: purple;
 	shape-rendering: crispEdges;
@@ -58,11 +54,11 @@ body,html{
 
 .trendln{
 	fill: none;
-	stroke: #ccc;
+	stroke: rgba(0,100,154,.6);
 	stroke-width: 4px;
-}
-
-
+	stroke-dasharray: 10,4;
+	}
+	
 .area{
 	opacity: .1;
 	stroke: #ccc;

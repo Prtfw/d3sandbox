@@ -398,7 +398,8 @@
 			})
 			.y(function(d){
 				return y2(d.value);
-			});
+			})
+			.interpolate('cardinal')
 			
 	var area = d3.svg.area()
 	           .x(function(d){
@@ -408,6 +409,7 @@
 	           .y0(height)
 	           .y1(function(d){
 				return y2(d.value);})
+                .interpolate('cardinal')
                 
     function plot2(params){
         
@@ -462,7 +464,7 @@
             .enter()
                 .append('circle')
                 .classed('pt', true)
-                .attr('r', 2);
+                .attr('r', 3.5);
                 
                 
         
@@ -529,4 +531,4 @@
 
     
 </body>
-</html>
+</html>C
