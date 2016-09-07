@@ -13,7 +13,15 @@ body,html{
 #chart2{
 	background-color: #F5F2EB;
 	border: 1px solid #CCC;
+	/*//stroke: black;*/
+
 }
+
+#chart2.trendln{
+	fill: none;
+	stroke: #ccc;
+	}
+	
 .bar{
 	fill: purple;
 	shape-rendering: crispEdges;
@@ -35,7 +43,8 @@ body,html{
 }
 
 .Ax path,
-.Ax line{
+.Ax line
+{
 	fill: none;
 	stroke: #000;
 }
@@ -45,4 +54,17 @@ body,html{
 	fill: none;
 	stroke: #ccc;
 	
+}
+
+.trendln{
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 4px;
+}
+
+
+.area{
+	opacity: .1;
+	stroke: #ccc;
+	stroke-width: 4px;
 }
